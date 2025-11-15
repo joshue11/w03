@@ -1,4 +1,3 @@
-// Reference.cs
 public class Reference
 {
     private string _book;
@@ -6,7 +5,6 @@ public class Reference
     private int _verseStart;
     private int _verseEnd;
 
-    // Constructor para un solo versículo
     public Reference(string book, int chapter, int verse)
     {
         _book = book;
@@ -15,7 +13,6 @@ public class Reference
         _verseEnd = verse;
     }
 
-    // Constructor para un rango de versículos
     public Reference(string book, int chapter, int verseStart, int verseEnd)
     {
         _book = book;

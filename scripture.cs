@@ -1,3 +1,4 @@
+// Scripture.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,31 +7,44 @@ public class Scripture
 {
     private Reference _reference;
     private List<Word> _words;
-    private Random _rand = new Random();
+    private static Random _random = new Random();
 
     public Scripture(Reference reference, string text)
     {
         _reference = reference;
-        _words = text.Split(" ")
-                     .Select(w => new Word(w))
-                     .ToList();
+        _words = new List<Word>();
+
+        // Dividimos en tokens por espacios (preserva puntuación unida a la palabra)
+        string[] tokens = text.Split(' ');
+        foreach (string token in tokens)
+        {
+            _words.Add(new Word(token));
+        }
     }
 
-    public void HideRandomWords()
+    // Oculta hasta 'count' palabras, eligiendo sólo entre las que NO están ocultas.
+    // Si no hay suficientes palabras visibles, oculta las que queden.
+    public void HideRandomWords(int count)
     {
-        // Oculta 2–3 palabras por iteración (puedes ajustar)
-        int wordsToHide = 2;
+        List<int> visibleIndexes = new List<int>();
+        for (int i = 0; i < _words.Count; i++)
+        {
+            if (!_words[i].IsHidden())
+                visibleIndexes.Add(i);
+        }
 
-        var visibleWords = _words.Where(w => !w.IsHidden()).ToList();
-
-        if (visibleWords.Count == 0)
+        if (visibleIndexes.Count == 0)
             return;
 
-        for (int i = 0; i < wordsToHide && visibleWords.Count > 0; i++)
+        // Si count es mayor que las visibles, limitamos
+        int toHide = Math.Min(count, visibleIndexes.Count);
+
+        for (int i = 0; i < toHide; i++)
         {
-            int index = _rand.Next(visibleWords.Count);
-            visibleWords[index].Hide();
-            visibleWords.RemoveAt(index);
+            int pick = _random.Next(visibleIndexes.Count);
+            int index = visibleIndexes[pick];
+            _words[index].Hide();
+            visibleIndexes.RemoveAt(pick); // evitar volver a elegir la misma
         }
     }
 
@@ -41,7 +55,8 @@ public class Scripture
 
     public string GetDisplayText()
     {
-        string scriptureText = string.Join(" ", _words.Select(w => w.GetDisplayText()));
-        return $"{_reference.GetDisplayText()} — {scriptureText}";
+        // Construimos la línea de palabras unidas por espacios
+        string line = string.Join(" ", _words.Select(w => w.GetDisplayText()));
+        return $"{_reference.GetDisplayText()}\n{line}";
     }
 }

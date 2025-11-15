@@ -1,3 +1,4 @@
+// Reference.cs
 public class Reference
 {
     private string _book;
@@ -14,7 +15,7 @@ public class Reference
         _verseEnd = verse;
     }
 
-    // Constructor para un rango
+    // Constructor para un rango de versículos
     public Reference(string book, int chapter, int verseStart, int verseEnd)
     {
         _book = book;

@@ -1,36 +1,38 @@
+// Program.cs
+// W03 Scripture Memorizer - Joshue Murillo
+// Extras implemented: HideRandomWords selects only visible words (no repeats).
+// Classes and members follow naming conventions requested.
+
 using System;
 
 class Program
 {
     static void Main(string[] args)
     {
-        // SCRIPTURE (PUEDES CAMBIARLO AQUÍ)
+        // Puedes cambiar aquí la referencia y el texto o cargar desde archivo para mejorar.
         Reference reference = new Reference("Proverbs", 3, 5, 6);
-        Scripture scripture = new Scripture(reference,
-            "Trust in the Lord with all thine heart; and lean not unto thine own understanding.");
+        string text = "Trust in the Lord with all thine heart and lean not unto thine own understanding.";
+        Scripture scripture = new Scripture(reference, text);
 
-        // EXCEEDING REQUIREMENTS:
-        // - Solo se esconden palabras que todavía no están ocultas.
+        const int hideCountPerEnter = 3; // cuántas palabras ocultar por ENTER (ajustable)
 
         while (true)
         {
             Console.Clear();
             Console.WriteLine(scripture.GetDisplayText());
-            Console.WriteLine("\nPress ENTER to hide words or type 'quit' to exit.");
-            string input = Console.ReadLine();
-
-            if (input.ToLower() == "quit")
-                break;
-
             if (scripture.AllWordsHidden())
+            {
+                Console.WriteLine("\nAll words are hidden. Program finished.");
+                break;
+            }
+
+            Console.WriteLine("\nPress ENTER to hide more words or type 'quit' to exit.");
+            string input = Console.ReadLine();
+            if (!string.IsNullOrEmpty(input) && input.Trim().ToLower() == "quit")
                 break;
 
-            scripture.HideRandomWords();
+            // Si sólo presionaron ENTER, ocultamos algunas palabras
+            scripture.HideRandomWords(hideCountPerEnter);
         }
-
-        Console.Clear();
-        Console.WriteLine("Final Scripture (all words hidden):\n");
-        Console.WriteLine(scripture.GetDisplayText());
     }
 }
-

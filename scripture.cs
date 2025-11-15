@@ -1,4 +1,3 @@
-// Scripture.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,6 @@ public class Scripture
         _reference = reference;
         _words = new List<Word>();
 
-        // Dividimos en tokens por espacios (preserva puntuación unida a la palabra)
         string[] tokens = text.Split(' ');
         foreach (string token in tokens)
         {
@@ -22,8 +20,6 @@ public class Scripture
         }
     }
 
-    // Oculta hasta 'count' palabras, eligiendo sólo entre las que NO están ocultas.
-    // Si no hay suficientes palabras visibles, oculta las que queden.
     public void HideRandomWords(int count)
     {
         List<int> visibleIndexes = new List<int>();
@@ -36,7 +32,6 @@ public class Scripture
         if (visibleIndexes.Count == 0)
             return;
 
-        // Si count es mayor que las visibles, limitamos
         int toHide = Math.Min(count, visibleIndexes.Count);
 
         for (int i = 0; i < toHide; i++)
@@ -44,7 +39,7 @@ public class Scripture
             int pick = _random.Next(visibleIndexes.Count);
             int index = visibleIndexes[pick];
             _words[index].Hide();
-            visibleIndexes.RemoveAt(pick); // evitar volver a elegir la misma
+            visibleIndexes.RemoveAt(pick); 
         }
     }
 
@@ -55,7 +50,6 @@ public class Scripture
 
     public string GetDisplayText()
     {
-        // Construimos la línea de palabras unidas por espacios
         string line = string.Join(" ", _words.Select(w => w.GetDisplayText()));
         return $"{_reference.GetDisplayText()}\n{line}";
     }
